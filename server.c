@@ -20,6 +20,10 @@ int main(int argc, char *argv[])
 
      int tickets[10] = {0};
      int x = 0;
+     int y = 0;
+     int i = 0;
+     int j = 0;
+     int tmpticket;
 
      srand(time(NULL));
 
@@ -43,38 +47,67 @@ int main(int argc, char *argv[])
      if (bind(sockfd, (struct sockaddr *) &serv_addr,
               sizeof(serv_addr)) < 0) 
               error("ERROR on binding");
-     listen(sockfd,5);
-     clilen = sizeof(cli_addr);
-     newsockfd = accept(sockfd, 
-                 (struct sockaddr *) &cli_addr, 
-                 &clilen);
-     if (newsockfd < 0) 
-          error("ERROR on accept");
-     bzero(buffer,256);
-     n = read(newsockfd,buffer,255);
-     if (n < 0) error("ERROR reading from socket");
-     printf("Here is the message: %s\n",buffer);
-     n = write(newsockfd,"I got your message",18);
-     if (n < 0) error("ERROR writing to socket");
-
-     if (strcmp(buffer,"buy\n") == 0)
-     {
-	     printf("You are buying a ticket!\n");
-	     for (x = 0; x < 10; x++)
+     //while(1)
+     //{
+     	listen(sockfd,5);
+     	clilen = sizeof(cli_addr);
+     	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+     	if (newsockfd < 0) 
+        	  error("ERROR on accept");
+     	bzero(buffer,256);
+   
+   //The program is now in an infinite loop, so it continues to run -Andrew  
+   while(1)
+   {
+  
+ 	 n = read(newsockfd,buffer,255);
+    	 if (n < 0) error("ERROR reading from socket");
+    	 printf("Here is the message: %s\n",buffer);
+    	 n = write(newsockfd,"I got your message",18);
+    	 if (n < 0) error("ERROR writing to socket");
+	
+	     if (strcmp(buffer,"buy\n") == 0)
 	     {
-                  if(tickets[x] == 0)
-		  {
-		       tickets[x] = rand() % 89999 + 10000;
-	               printf("Your ticket number is: %d\n",tickets[x]);
-		       break;
-		  }
+		    
+		     printf("You are buying a ticket!\n");
+		     
+		    //Ensures that no duplicate numbers can be created, just in case -Andrew
+		    while (1)
+		    {
+		         tmpticket = rand() % 89999 + 10000;
+			 for (y = 0; y < 10; y++)
+			 {
+			     printf("y = %d\n", y);
+			     if (tmpticket == tickets[y])
+			     {
+			         //printf("DUPLICATE FOUND\n");
+			         tmpticket = rand() % 89999 + 10000;
+			         y = -1;
+			      }
 
-		 
-	     } 
-	   
+			  }
+			  break;
+		     }
+
+
+		     for (x = 0; x < 10; x++)
+		     {
+	                  if(tickets[x] == 0)
+			  {
+
+		               tickets[x] = tmpticket;
+			       printf("Your ticket number is: %d\n",tickets[x]);
+			       break;
+			  }
+	
+			 
+		     } 
+		     if(x >= 10)
+			     printf("ERROR: We are out of tickets! Try again later!\n");
+	     }
+	     else
+		     printf("You are not buying a ticket!\n");
      }
-     else
-	     printf("You are not buying a ticket!\n");
      close(newsockfd);
      close(sockfd);
      return 0; 
