@@ -105,6 +105,8 @@ int main(int argc, char *argv[])
 		     if(x >= 10)
 			     printf("ERROR: We are out of tickets! Try again later!\n");
 	     }
+	     else if (strcmp(buffer,"exit\n") == 0)
+		     return 0;
 	     else
 		     printf("You are not buying a ticket!\n");
      }
