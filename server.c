@@ -77,7 +77,6 @@ int main(int argc, char *argv[])
 		         tmpticket = rand() % 89999 + 10000;
 			 for (y = 0; y < 10; y++)
 			 {
-			     printf("y = %d\n", y);
 			     if (tmpticket == tickets[y])
 			     {
 			         //printf("DUPLICATE FOUND\n");
@@ -107,8 +106,15 @@ int main(int argc, char *argv[])
 	     }
 	     else if (strcmp(buffer,"exit\n") == 0)
 		     return 0;
+
+	     //Checks if the user entered "cancel" as the first 6 digits. Next, needs to use string manipulation to copy the 7th-12th characters into a seperate string, which will be the cancelled ticket number -Andrew
+	     else if(strncmp(buffer, "cancel", 6) == 0)
+	     {
+		     printf("CANCEL\n");
+	     }
 	     else
 		     printf("You are not buying a ticket!\n");
+	     bzero(buffer,256);
      }
      close(newsockfd);
      close(sockfd);
