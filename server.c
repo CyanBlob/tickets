@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 {
 
      int tickets[10] = {0};
+     char ticketArray[5] = {0};
      int x = 0;
      int y = 0;
      int i = 0;
@@ -111,6 +112,10 @@ int main(int argc, char *argv[])
 	     else if(strncmp(buffer, "cancel", 6) == 0)
 	     {
 		     printf("CANCEL\n");
+
+		     strncpy(ticketArray, &buffer[7], 6);
+
+		     printf("%s\n", ticketArray);
 	     }
 	     else
 		     printf("You are not buying a ticket!\n");
